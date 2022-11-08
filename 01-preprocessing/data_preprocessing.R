@@ -1,0 +1,21 @@
+
+# constants
+DATASET_FILENAME = 'Data.csv'
+WORKING_DIR = "~/pya.h/machine-learning/excersizes/01-preprocessing"
+
+
+# first, let's set the current address as the working directory
+setwd(WORKING_DIR)
+
+# now, read the dataset
+dataset = read.csv(DATASET_FILENAME)
+View(dataset)
+
+# handle the missing values
+dataset$Age = ifelse(test = is.na(dataset$Age), 
+                     yes = ave(dataset$Age, FUN = function(x) mean(x, na.rm = TRUE)),
+                     no = dataset$Age)
+
+dataset$Salary = ifelse(test = is.na(dataset$Salary), 
+                        yes = ave(dataset$Salary, FUN = function(x) mean(x, na.rm = TRUE)),
+                        n= dataset$Salary)
