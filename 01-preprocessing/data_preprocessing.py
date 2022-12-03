@@ -85,7 +85,6 @@ def simple_encode(matrix, single_column = None):
 
 
 # simple_encode(X)
-simple_encode(Y)
 from sklearn.compose import ColumnTransformer
 
 def hot_encode(matrix, single_column=None):
@@ -97,8 +96,7 @@ def hot_encode(matrix, single_column=None):
     
     if single_column is not None:
         #lblhoten = OneHotEncoder(categories_features=[single_column])
-        #matrix = lblhoten.fit_transform(matrix).toarray()
-        
+        #matrix = lblhoten.fit_transform(matrix).toarray()   
         return hot_encode_single(matrix, single_column)
 
     if not is_vector(matrix):
@@ -118,3 +116,10 @@ def hot_encode(matrix, single_column=None):
     return matrix
 
 X = hot_encode(X)
+simple_encode(Y) # since Y is a dependant var, machine learning algorythms know that Y is a category
+# and there is no order bettween its values => LabelEncoder is good enough
+
+# now its time to split the data into trainging and test data
+# out machine learning project will earn on the training data and will check its understandings on the test data
+from sklearn.model_selection import train_test_split
+Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, test_size=0.25, random_state=0)
