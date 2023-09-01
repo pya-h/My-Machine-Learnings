@@ -5,7 +5,7 @@ WORKING_DIR = "~/pya.h/machine-learning/excersizes/01-preprocessing"
 
 
 # first, let's set the current address as the working directory
-setwd(WORKING_DIR)
+#setwd(WORKING_DIR)
 
 # now, read the Data set
 Dataset = read.csv(DATASET_FILENAME)
@@ -33,5 +33,8 @@ Splitter = sample.split(Dataset$Purchased, SplitRatio = 3/4) # Splitter will be 
 TrainingSet = subset(Dataset, Splitter)  # or Splitter == TRUE => subset will get a second parameter that is a vector 
 # of Boolean variables and selects the true one
 TestSet = subset(Dataset, Splitter == FALSE)
+
+TrainingSet[, 2:3] = scale(TrainingSet[, 2:3])
+TestSet[, 2:3] = scale(TestSet[, 2:3])
 View(TrainingSet)
 View(TestSet)

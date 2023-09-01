@@ -50,10 +50,6 @@ def auto_impute(matrix):
     return matrix
 
 
-auto_impute(X)  # didnt work for now :(
-
-# encode the columns that contain non-numeric values such as X[:, 0] and Y[:]
-
 def is_nan(x):
     for el in x:
         # if str(el).isnumeric() or np.isscalar(el):
@@ -64,6 +60,8 @@ def is_nan(x):
             pass
     return True
 
+
+# SIMPLE ENCODING
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 # this method uses a simple encoding method, that assigna specific number
 # to each non numeric value, such as 0 => Germany, 1 => Spain, ...
@@ -84,9 +82,9 @@ def simple_encode(matrix, single_column = None):
     return matrix
 
 
-# simple_encode(X)
+# HOT ENCODING
 from sklearn.compose import ColumnTransformer
-
+# encode the columns that contain non-numeric values such as X[:, 0] and Y[:]
 def hot_encode(matrix, single_column=None):
     
     def hot_encode_single(matrix, column):
@@ -115,6 +113,9 @@ def hot_encode(matrix, single_column=None):
             matrix = hot_encode_single(matrix, 0)
     return matrix
 
+
+auto_impute(X)  # didnt work for now :(
+# simple_encode(X)
 X = hot_encode(X)
 simple_encode(Y) # since Y is a dependant var, machine learning algorythms know that Y is a category
 # and there is no order bettween its values => LabelEncoder is good enough
@@ -123,3 +124,10 @@ simple_encode(Y) # since Y is a dependant var, machine learning algorythms know 
 # out machine learning project will earn on the training data and will check its understandings on the test data
 from sklearn.model_selection import train_test_split
 Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, test_size=0.25, random_state=0)
+
+# now we transform the values into a common range so that all independent variables have the same effect
+# on the dependant variable 
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+Xtrain = scaler.fit_transform(Xtrain)
+Xtest = scaler.transform(Xtest)
