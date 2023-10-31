@@ -1,7 +1,7 @@
 import data_preprocessing
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
 
+import numpy as np
 
 X, y = data_preprocessing.read()
 
@@ -10,10 +10,17 @@ X = data_preprocessing.hot_encode(X)
 
 # prevent the dummy variable trap => remove one of them
 X = X[:, 1:]
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=0)
 
-regressor = LinearRegression()
-regressor.fit(X_train, y_train)
+# split to test/train   
+linear_regressor, y_predicted = data_preprocessing.linear_regression_prediction(X, y)
 
-y_predicted = regressor.predict(X_test)
+# Backward Elimination
+    # current formula is: y = a1x1 + a2x2 + ...
+# add ones to the start of the start of matrix for obtaining the optimal formula as:
+    # (known as intercept)
+    # y = x0 + a1x1 + a2x2
+
+
+X_optimized = data_preprocessing.backward_eliminatation(X, y, SIGFICANT_LEVEL=0.05)
+
+opt_linear_regressor, y_opt_predicted = data_preprocessing.linear_regression_prediction(X, y)

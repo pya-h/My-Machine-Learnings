@@ -5,6 +5,8 @@ from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder, StandardScaler
 from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+import statsmodels.api as sm
 
 
 # distinguish dependant and independant variables
@@ -121,6 +123,34 @@ def hot_encode(matrix, single_column=None):
         if is_nan(matrix):
             matrix = hot_encode_single(matrix, 0)
     return matrix
+
+def add_ones(matrix):
+    return np.append(arr=np.ones((len(matrix), 1)).astype(int), values=matrix, axis=1)
+    # arr and values parameters are used instead of eachother, so the ones become at the start of the matrix
+    
+    
+def linear_regression_prediction(X, y):
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=0)
+    regressor = LinearRegression()
+    regressor.fit(X_train, y_train)
+    return regressor, regressor.predict(X_test)
+    
+
+def backward_eliminatation(X, y, SIGFICANT_LEVEL = 0.05):
+    X = add_ones(X)  # REMEMBER: this doesnt change the actual X outside the function
+    X_optimized = X[:, :]
+    # start of Backward Elimination:
+    while np.any(X_optimized):  # X_optimized is not empty
+        X_optimized = np.array(X_optimized, dtype=float)  # this line fixes: ufunc 'isfinite' not supported for the input types, 
+        OLS_regressor = sm.OLS(endog=y, exog=X_optimized).fit()
+        print("X_opt=", X_optimized, " Summary: ", OLS_regressor.summary())
+        maxp_index = np.argmax(OLS_regressor.pvalues)  # index of maximum p
+        if maxp_index < SIGFICANT_LEVEL:  # end of the back-elimination algorythm
+            break
+        # if P > SL => remove predictor
+        X_optimized = np.delete(X_optimized, maxp_index, axis=1)
+    return X_optimized
 
 
 if __name__ == '__main__':
