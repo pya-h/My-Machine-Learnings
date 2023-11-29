@@ -26,9 +26,6 @@ poly_model = data_preprocessing.get_linear_regressor(X_poly, y)
 
 # plot & compare
 plt.figure(figsize=(15, 8))
-plot_inputs = ((slr_model.predict(X), "Linear Regression Model"),
-               (poly_model.predict(X_poly), "Polynomial Regression Model"))
-
 # create an X-axis for prediction plot, by creating a matrix stepping by 0.1
 X_grid = np.arange(min(X), max(X), 0.1)
 X_grid = X_grid.reshape((len(X_grid), 1))
